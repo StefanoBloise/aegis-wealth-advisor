@@ -1,0 +1,57 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,booktabs,longtable,array,hyperref,enumitem}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}\setlist{nosep,leftmargin=*}
+\title{AEGIS\\\large Security Self-Assessment / Deliverable 05}
+\author{Stefano Bloise \and Fahd Mounir}\date{October 2026}
+\begin{document}\maketitle
+\section{Assessment boundary}
+This self-assessment covers the delivered local research simulator and its optional LLM parser adapter. It is not a penetration-test certificate, regulatory approval or production assurance. All products and returns are fictional/synthetic. The application cannot connect to a broker or transfer real money. The baseline threat model is untrusted user text or model output entering a trusted, single-user localhost process. A malicious local operator is outside that boundary.
+
+\section{Implemented permission tiers}
+\begin{longtable}{p{.18\linewidth}p{.32\linewidth}p{.42\linewidth}}
+\toprule Tier & Allowed action & Enforcement\\\midrule
+READ & Product comparison and interpretation draft & No parser function receives account or execution tools. Reading cannot propose or approve through service methods.\\
+PROPOSE & Generate a reviewed allocation & Requires the trusted application's PROPOSE role. Strict profile and bound schema. Solver abstains on infeasibility or invalid numerical result.\\
+APPROVE\_SIM & Approve and execute a simulated rebalance & Requires exact boolean confirmation, a stored proposal, current account revision and unexpired proposal. Execution additionally needs its random approval token.\\
+LIVE & None & No live brokerage, payment, wallet or order API exists in the code.\\\bottomrule
+\end{longtable}
+Role strings are trusted application arguments, not an identity provider. The HTTP controller assigns these roles to its UI workflows after request-token and origin checks. It does not accept a role supplied by the client or model. Within a trusted Python process, an operator can call methods directly; therefore this is capability separation for a simulation, not robust multi-user authorization.
+
+\section{Controls and evidence}
+\begin{enumerate}
+\item \textbf{Untrusted parser output.} Exact JSON key sets, supported product IDs, finite numerical bounds and size limits. Duplicate keys are rejected. Clarification prevents generation of a draft. Mock attacks including added role fields and NaN fail closed.
+\item \textbf{Mandate confirmation.} UI displays interpreted bounds and requires review before a proposal. Schema validity alone cannot detect every semantic misunderstanding. The offline grammar declines unrestricted prose.
+\item \textbf{Hard policies.} Long-only budget, concentration, aggregate risk and liquidity limits are compiled independently of the language model. Confirmed client bounds remain hard constraints. Conflicts return NEEDS\_REVISION without weights.
+\item \textbf{Proposal integrity.} Application stores a deep copy with a content digest, account revision and five-minute monotonic-clock expiry. Mutating a returned object does not mutate the stored allocation. The digest is an identifier, not a signature or identity proof.
+\item \textbf{Explicit simulation approval.} No token appears in parser output or proposal generation. Tokens use the operating-system randomness source, bind to one proposal and become invalid after execution. Reapproval replaces earlier tokens for that proposal. Tests cover missing approval, expiry, stale revision and replay.
+\item \textbf{Local web boundary.} Bind only to 127.0.0.1. Exact Host and Origin checks, random POST token, 16 KiB body limit, no-store responses, content-type validation and a nonce-based Content Security Policy. Dynamic text uses textContent. The browser is not permitted to supply the service role.
+\item \textbf{Network and secrets.} Optional provider URL is fixed to the OpenAI HTTPS endpoint. Redirects and environment proxies are disabled; request timeout is 12 seconds and response read is capped at 64 KiB. API keys remain in environment variables. No network is used in the baseline numerical workflow.
+\item \textbf{Audit and accounting.} JSONL events include sequence, UTC timestamp, previous hash and current SHA-256 hash. The verifier detects modification of retained events and broken order. Execution logs its intended account transition before updating memory; a write error stops execution. The simulator records fee, NAV, notional changes and revision.
+\end{enumerate}
+
+\section{Known-risk register}
+\small
+\begin{longtable}{p{.08\linewidth}p{.14\linewidth}>{\raggedright\arraybackslash}p{.33\linewidth}>{\raggedright\arraybackslash}p{.33\linewidth}}
+\toprule ID & Severity & Residual risk & Mitigation or required next step\\\midrule
+R1 & High & No production authentication, tenant isolation or authorization service. & Local single-user scope only. Add reviewed identity and access controls before any shared deployment.\\
+R2 & High & Products, fees and scenarios are illustrative. No jurisdictional suitability, tax or product-access evaluation. & Prominent simulation labels. Integrate licensed data and qualified compliance review before real advice.\\
+R3 & High & Schema-valid LLM errors or prompt injection can still alter interpreted meaning. & No LLM execution tools, explicit user review, deterministic optimizer and hard policy. Evaluate live model on a labeled semantic test set.\\
+R4 & Medium & Optional provider sees submitted text; model availability, API compatibility and account permissions vary. & Opt-in consent, avoid personal information, timeout, schema validation and explicit unavailable status. No live credentials were used for testing.\\
+R5 & Medium & Audit chain is unsigned and has no trusted external anchor. An attacker controlling all files can rewrite or truncate it. & Retain externally signed head hashes and append-only remote storage for production. Included hashes provide local consistency only.\\
+R6 & Medium & Account and approvals are volatile. Crash between log append and memory mutation creates ambiguity. No fsync or transactional recovery. & Restart creates a new simulation. Production needs atomic durable account/event transactions and idempotency storage.\\
+R7 & Medium & Local HTTP service is single-threaded, lacks rate limiting and socket-level slow-client protection. & Never expose publicly. Reviewed gateway, authentication, request deadlines and concurrency controls are future requirements.\\
+R8 & Medium & Optimization assumptions, arbitrary radius and risk policy can produce unattractive allocations. Synthetic experiments do not calibrate real risk. & Disclose parameters and units. Retain cash or request revision. Independent model validation and calibration are required.\\
+R9 & Medium & Numerical tolerances, library regressions and resource failures remain possible. & Pinned tested environment, solver time limit, independent residual/objective checks and abstention. Finite tests do not prove bug freedom.\\
+R10 & Low & JSONL contains structured profile and allocation information even though raw text and API keys are absent. & Use fictional data, control local file permissions, exclude personal sessions from distribution and establish retention rules.\\
+R11 & Medium & Fractional notional accounting omits fills, bid/ask spread, taxes, settlement and real cash-rate risk. & Clearly labeled simulation with explicit fee rule. No live order integration.\\\bottomrule
+\end{longtable}
+
+\normalsize
+\section{Verification status}
+The included unittest run passes 51 test methods, including 40 randomized feasibility instances inside one method and end-to-end HTTP execution. The separate evidence session asserts seven expected outcomes and verifies a nine-event chain. Solver feasibility and objective reconstruction residuals are included in the actual JSON outputs. This evidence comes from a local simulated account, not a competition-hosted sandbox. The LLM adapter was tested using injected responses and failure cases; the live API was not exercised. Docker was not built, no external penetration test was performed, and a full browser-interaction automation run is not claimed.
+
+\section{Release decision}
+Suitable for a clearly labeled, single-user competition demonstration with synthetic inputs. Not suitable for real-money execution or public multi-user deployment. The team should review all claims, publish the actual code repository, check competition submission rules and keep any registration/passport documents separate from source code.
+\end{document}

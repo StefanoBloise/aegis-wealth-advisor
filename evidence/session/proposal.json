@@ -1,0 +1,113 @@
+{
+  "data_kind": "synthetic",
+  "data_sha256": "9d4a2a0244670a088ba25fcd8bf6e22bf32b001b861d98911176f901b5ce4fd8",
+  "policy_reasons": [
+    "growth policy permits at most 85% in risky products"
+  ],
+  "assumptions": {
+    "epsilon": 2e-05,
+    "gamma": 0.02,
+    "alpha": 0.95,
+    "cost_bps": 1
+  },
+  "profile": {
+    "horizon_years": 7.0,
+    "risk": "growth",
+    "liquidity_fraction": 0.15,
+    "loss_tolerance": 0.25,
+    "experience": "experienced"
+  },
+  "constraints": [
+    {
+      "asset": "TECH",
+      "sense": "<=",
+      "weight": 0.15
+    },
+    {
+      "asset": "CASH",
+      "sense": ">=",
+      "weight": 0.15
+    },
+    {
+      "asset": "BOND",
+      "sense": ">=",
+      "weight": 0.2
+    }
+  ],
+  "status": "PROPOSED",
+  "weights": {
+    "EQ": 0.0,
+    "TECH": 0.0,
+    "BOND": 0.2,
+    "CREDIT": 0.0,
+    "GOLD": 0.0,
+    "CASH": 0.8
+  },
+  "metrics": {
+    "daily_mean": -2.190462345037015e-05,
+    "daily_cvar": 0.0016881893774390525,
+    "daily_robust_cvar": 0.0017681893774390525,
+    "daily_volatility": 0.000735246931404718,
+    "turnover_l1": 0.39999999999999997,
+    "estimated_rebalance_cost_fraction": 3.9999999999999996e-05,
+    "objective": 0.0001012684109991512
+  },
+  "validation": {
+    "max_primal_residual": 0.0,
+    "objective_reconstruction_error": 1.3552527156068805e-20,
+    "stationarity_residual": 1.0842021724855044e-19,
+    "complementarity_residual": 0.0
+  },
+  "constraint_audit": [
+    {
+      "label": "Suitability: total risky allocation",
+      "slack": 0.6499999999999999,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Concentration: EQ <= 35%",
+      "slack": 0.35,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Concentration: TECH <= 35%",
+      "slack": 0.35,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Concentration: BOND <= 35%",
+      "slack": 0.14999999999999997,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Concentration: CREDIT <= 35%",
+      "slack": 0.35,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Concentration: GOLD <= 35%",
+      "slack": 0.35,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Client 1: TECH <= 15.00%",
+      "slack": 0.15,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Client 2: CASH >= 15.00%",
+      "slack": 0.65,
+      "rhs_local_derivative": -0.0
+    },
+    {
+      "label": "Client 3: BOND >= 20.00%",
+      "slack": 0.0,
+      "rhs_local_derivative": -0.0005063420549957561
+    }
+  ],
+  "message": "Review synthetic allocation and constraints before approving a simulated rebalance.",
+  "account_revision": 0,
+  "nav_before": 100000.0,
+  "proposal_id": "60e6e0bcfb413c12feedee1d1bec8b8bf76ac3fe125cc949b422e809f09f763f",
+  "expires_at_monotonic": 1485.174942293
+}

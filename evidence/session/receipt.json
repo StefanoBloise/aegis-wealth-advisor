@@ -1,0 +1,33 @@
+{
+  "status": "SIMULATED",
+  "proposal_id": "60e6e0bcfb413c12feedee1d1bec8b8bf76ac3fe125cc949b422e809f09f763f",
+  "nav_before": 100000.0,
+  "fee": 3.9999999999999996,
+  "nav_after": 99996.0,
+  "weights_before": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "weights_after": [
+    0.0,
+    0.0,
+    0.2,
+    0.0,
+    0.0,
+    0.8
+  ],
+  "dollar_changes": {
+    "EQ": 0.0,
+    "TECH": 0.0,
+    "BOND": 19999.2,
+    "CREDIT": 0.0,
+    "GOLD": 0.0,
+    "CASH": -20003.199999999997
+  },
+  "revision": 1,
+  "disclosure": "Fractional notional rebalance at unchanged prices, fee charged on pre-fee L1 turnover. No real orders."
+}

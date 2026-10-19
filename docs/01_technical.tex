@@ -1,0 +1,123 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,booktabs,longtable,enumitem,xcolor,hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{5pt}
+\emergencystretch=2em
+\setlength{\parindent}{0pt}
+\title{AEGIS\\\large Inspectable Wealth Advice with Explicit Simulation Approval\\Technical Documentation / Deliverable 01}
+\author{Stefano Bloise \and Fahd Mounir}
+\date{2026 Shenzhen International FinTech Competition\\International Track / Topic B}
+\begin{document}\maketitle
+\begin{abstract}
+AEGIS implements a local wealth-advisory workflow: compare a fictional product catalog, collect a structured client profile, interpret allocation bounds, solve a robust allocation problem, review its constraint audit, and explicitly approve a simulated rebalance. A linear-programming formulation replaces the original custom C and conic stack. All scenario data is synthetic. The contribution is an inspectable integration of optimization, clarification and execution controls, not a claim of a new optimization theorem, regulatory certification, or superior investment returns. Invalid inputs and infeasible mandates cause abstention. The system never silently relaxes client constraints.
+\end{abstract}
+\section{Scope and competition fit}
+The official Topic B brief asks for product comparison, client risk profiling and advisory dialogue leading to explainable allocation suggestions. The shared scoring weights are task completion 40\%, security and compliance 30\%, and innovation and interaction 30\%. This implementation addresses those workflows in a research simulator. Its policy checks are demonstration controls, not a jurisdiction-specific suitability determination.
+
+The release contains six fictional USD model sleeves: EQ, TECH, BOND, CREDIT, GOLD and CASH. Annual fee assumptions are respectively 12, 25, 10, 18, 20 and 0 basis points. The catalog shows their classes and principal risk descriptions. These are not actual funds, current quotes, ESG ratings or product recommendations. CASH is a simulated zero-return accounting position, not a guarantee about a real deposit.
+
+\section{Architecture and trust boundaries}
+\begin{longtable}{p{.24\linewidth}p{.69\linewidth}}
+\toprule Component & Implemented responsibility\\\midrule
+\texttt{aegis/core.py} & Strict profile and constraint validation, synthetic scenarios, empirical CVaR, robust LP and independent numerical validation.\\
+\texttt{aegis/parser.py} & Deterministic explicit grammar or optional OpenAI JSON parser. Unknown fields, nonfinite numbers and unsupported product IDs fail closed.\\
+\texttt{aegis/service.py} & Proposal snapshots, process-local capabilities, expiring approval tokens, account revision checks, simulated notional accounting and chained audit events.\\
+\texttt{app.py}, \texttt{ui.html} & Single-user localhost workflow with product comparison, profile, mandate confirmation, proposal inspection and separate approval/execution controls.\\
+\texttt{tests/}, \texttt{tools/} & Automated numerical and security tests, evidence generation, synthetic walk-forward experiment, video rendering and packaging.\\\bottomrule
+\end{longtable}
+The parser has no account, optimizer, permission or execution tools. It proposes a draft. The user confirms the visible bounds before the application requests an allocation. A proposal is copied into application-owned memory and identified by a SHA-256 digest of its content before adding its expiry field. Approval issues a random token tied to that proposal. Execution checks that token, the account revision and the five-minute expiry. Changing profile or text in the UI invalidates its current approval controls. Restarting the process starts a new account and invalidates all tokens.
+
+\section{Profile and dialogue policy}
+All five profile fields are mandatory: horizon in years, risk preference, liquidity fraction, stated loss tolerance and investment experience. Risk preferences cap aggregate risky weight at 30\%, 60\% or 85\% for conservative, balanced or growth. Horizon below two years or zero loss tolerance sets the cap to zero. Positive loss tolerance below 10\% further caps risky weight at 25\%; beginner experience caps it at 50\%. Finally, the cap cannot exceed one minus the liquidity fraction. Each risky sleeve has a 35\% concentration limit. CASH is exempt from that single-sleeve limit.
+
+These thresholds are transparent illustrative policy choices. Loss tolerance is not a mathematical loss bound, nor is this questionnaire a validated psychometric instrument. The system lacks income, liabilities, tax, residence, product-access and legal suitability checks and therefore must remain a simulation.
+
+Offline dialogue accepts commands such as \texttt{TECH <= 15\%; BOND >= 20\%}. Arbitrary prose produces a clarification rather than guessed constraints. Optional LLM mode sends only the supplied text after explicit consent. It calls the fixed HTTPS OpenAI chat-completions endpoint with JSON output requested. The local validator then requires exactly \texttt{constraints} and \texttt{clarification}; each constraint must contain exactly \texttt{asset}, \texttt{sense} and \texttt{weight}. Duplicate JSON keys, unexpected properties and nonfinite/out-of-range values are rejected. Clarification text suppresses the draft constraints. Timeout, credentials, provider or schema errors yield \texttt{UNAVAILABLE}, with no silent fallback. A schema-valid misinterpretation remains possible, so confirmation is mandatory. Live provider behavior was not tested in this release; injected provider responses test the integration boundary.
+
+\section{Mathematical specification}
+\subsection{Units and feasible set}
+Let $r_t\in\mathbb R^5$ denote one-day net returns of the risky sleeves, $t=1,\ldots,T$. The sixth return is identically zero. Let $v\in\mathbb R_+^5$ be risky weights, $c\geq0$ cash, $w=(v,c)$, and $\mathbf1^Tw=1$. All risk and return numbers below are daily fractions. No square-root-of-time CVaR annualization is used. The feasible set $\mathcal W$ comprises the policy caps and every confirmed client bound. Client inequalities are never softened.
+
+For losses $L_t=-r_t^Tv$, empirical CVaR is
+\[
+ \widehat C_\alpha(v)=\min_{\tau\in\mathbb R}\left\{\tau+
+ \frac1{T(1-\alpha)}\sum_t(L_t-\tau)_+\right\}.
+\]
+The evaluation function uses a sample quantile and this positive-part identity, including fractional tail mass. It does not average all observations below a percentile, which gives a different answer in small samples or with ties.
+
+\subsection{Exact robust epigraph objective}
+Let $\widehat P=T^{-1}\sum_t\delta_{r_t}$ and let $\mathcal B_\epsilon$ be its type-1 Wasserstein ball with ground distance $\|r-r'\|_1$ on the unrestricted risky-return support $\mathbb R^5$. CASH is excluded from ambiguity. For $\gamma>0$, define
+\[
+ f_{v,\tau}(r)=-r^Tv+\gamma\tau+
+ \frac{\gamma}{1-\alpha}(-r^Tv-\tau)_+.
+\]
+The implemented objective is explicitly
+\begin{equation}
+ \min_{w\in\mathcal W,\tau}\sup_{P\in\mathcal B_\epsilon}
+ \mathbb E_P[f_{v,\tau}(r)]+k\|w-w_0\|_1.\label{robust}
+\end{equation}
+This is a robust epigraph formulation: $\tau$ is chosen before the worst-case distribution. In particular, we do not rely on an unproved interchange of $\min_\tau$ and $\sup_P$ to market it as a different optimization problem. It gives an upper bound on the corresponding worst-case mean-plus-CVaR criterion.
+
+The two affine pieces of $f$ have slopes $-v$ and $-(1+\gamma/(1-\alpha))v$. Their maximum dual norm is
+\[
+ L=(1+\gamma/(1-\alpha))\|v\|_\infty.
+\]
+For any coupling of $P$ and $\widehat P$, the Lipschitz inequality gives $\mathbb E_P f\leq\mathbb E_{\widehat P}f+L\epsilon$. This upper bound is sharp as a supremum. For $v\ne0$, select $j$ with $v_j=\|v\|_\infty$ and move mass $m=\epsilon/D$ from one empirical atom $r_1$ to $r_1-De_j$. Choose $D\geq T\epsilon$ so $m\leq1/T$. This transport costs $mD=\epsilon$. For sufficiently large $D$, the destination lies on the second affine branch, and
+\[
+ m[f(r_1-De_j)-f(r_1)]=\epsilon L+O(D^{-1}).
+\]
+Taking $D\to\infty$ proves equality of the supremum and the upper bound. The $v=0$ and $\epsilon=0$ cases follow directly. The extremum need not be attained. Thus (\ref{robust}) reduces exactly to
+\begin{equation}
+ \min_{w\in\mathcal W}\ -\bar r^Tv+\gamma\widehat C_\alpha(v)
+ +\epsilon\left(1+\frac\gamma{1-\alpha}\right)\|v\|_\infty
+ +k\|w-w_0\|_1.\label{finite}
+\end{equation}
+The displayed robust CVaR envelope is $\widehat C_\alpha(v)+\epsilon\|v\|_\infty/(1-\alpha)$. The same Lipschitz argument bounds worst-case CVaR by this quantity. It is not a realized-loss guarantee or a statistically calibrated confidence interval. The unrestricted support is a mathematical stress model and can include returns below $-100\%$; restricting support would require a different formulation. The sample input itself enforces valid simple returns in $(-1,1]$.
+
+\subsection{LP implementation}
+With auxiliaries $u_t,z,d_i\geq0$, the objective is
+\[
+ -\bar r^Tv+\gamma\tau+\frac\gamma{T(1-\alpha)}\sum_tu_t
+ +\epsilon\left(1+\frac\gamma{1-\alpha}\right)z+k\sum_id_i,
+\]
+subject to $u_t\geq-r_t^Tv-\tau$, $v_j\leq z$, and
+$d_i\geq w_i-w_{0i}$, $d_i\geq w_{0i}-w_i$, in addition to $\mathcal W$.
+The variable order is $[w_1,\ldots,w_6,\tau,u_1,\ldots,u_T,z,d_1,\ldots,d_6]$.
+Bounds $0\leq d_i\leq1$ and $0\leq z\leq1$ lose no solutions because both portfolios lie in the simplex. Sparse matrices feed SciPy's HiGHS LP solver with a ten-second limit and $10^{-9}$ primal/dual feasibility tolerances.
+
+The UI and evidence use $\alpha=.95$, $\gamma=.02$, $\epsilon=.00002$ and $k=.0001$ (1 basis point per unit of L1 turnover). The lower-level API defaults are intentionally separate and fully recorded in each proposal. The cost is a one-off rebalance penalty in a one-day decision criterion, not an annual charge. Counting both buys and sells through L1 turnover is explicit. The fee convention may make retaining cash optimal. Sample means, parameter choices and the synthetic data are not return forecasts.
+
+\subsection{Validation and interpretation}
+A successful solver status is necessary. The code independently checks the full LP inequalities, all variable bounds and budget equality against $10^{-7}$, reconstructs the objective using empirical CVaR and actual turnover, and rejects disagreement above $10^{-7}$. It reports stationarity and inequality-complementarity residuals. Returned weights are not clipped or renormalized after validation, since that could invalidate user bounds.
+
+SciPy inequality marginals give a local derivative of the optimum with respect to the right-hand side as written in $Aw\leq b$. A lower allocation floor is represented with a negative row and negative right-hand side. Duals are local sensitivity information, not guaranteed finite-change returns. Degenerate optima can have multiple duals; a zero dual does not prove strict slack. No Slater-condition or irreducible-infeasible-subsystem claim is made.
+
+\section{Execution model and security design}
+The simulated account begins with USD 100,000 in CASH. An approved rebalance computes fee $F=V k\|w-w_0\|_1$, post-fee NAV $V'=V-F$ and notional changes $\Delta_i=V'w_i-Vw_{0i}$. Hence $\sum_i\Delta_i=-F$. Positions are fractional notional balances at unchanged prices. There are no market orders, fills, lot sizes, broker APIs, settlement or custody. The account revision increments after execution; every approval is invalidated. A log-write error aborts before account mutation. A process crash between an audit write and in-memory mutation is not transactionally recoverable; sessions are deliberately not resumed.
+
+The localhost HTTP service checks the exact Host, same-origin Origin and a random request token on POST. It limits request bodies to 16 KiB and serves no directory listing. Browser output uses text nodes, not untrusted HTML. The optional LLM connection disables redirects and environment proxies, uses a fixed HTTPS endpoint and times out after 12 seconds. Credentials are read from an environment variable and never written to proposal logs. Raw dialogue is not logged; structured profiles and allocations can still be sensitive.
+
+The READ, PROPOSE and APPROVE\_SIM capabilities demonstrate permission separation inside a trusted local process. They are not authentication credentials. The local operator has control of that process. No claim of protection against a malicious local user, concurrent clients or public internet deployment is made. Detailed residual risks are listed in Deliverable 05.
+
+\section{Evaluation and reproducibility}
+The supplied test log records 51 passing unittest cases on Python 3.12.14, NumPy 2.3.5 and SciPy 1.17.0. The randomized feasibility test contains 40 additional internal instances. Checks cover fractional CVaR, independent CVaR LPs, robust transport bounds, the asymptotic sharpness construction, local dual differences, malformed inputs, solver faults, profile policies, conflicting mandates, parser schema attacks, missing credentials, approvals, expiry, replay, audit tampering and the HTTP workflow. These are finite tests, not a proof that software has no bugs.
+
+The reference evidence session executed seven asserted scenarios and produced nine audit events. Its allocation is 20\% BOND and 80\% CASH under the explicit BOND floor. The fee is USD 4 and final simulated NAV is USD 99,996. Without the floor, the negative sample means can justify retaining cash. This behavior is disclosed rather than obscured by optimistic generated views.
+
+The benchmark script uses a separate synthetic seed, a 252-observation trailing training window, 21-day rebalancing, weight drift between rebalances and explicit costs. The robust and zero-radius empirical variants share profile, constraints and all other settings. A fixed feasible allocation provides a simple comparator. It is a software experiment on one generated path, not evidence of historical alpha or statistically significant superiority. The evaluation includes initial wealth in maximum-drawdown calculation.
+
+\section{Deployment and remaining work}
+Run \texttt{python app.py} from the release root and open \url{http://127.0.0.1:8765}. Python 3.12 is the tested runtime. The pinned requirements reproduce the two numerical dependencies; a separate portable range file supports other environments without promising identical results. The included Dockerfile is a deployment recipe and was not built here. The default demo needs no credentials, C compiler, model download or external data. For optional LLM use, set \texttt{OPENAI\_API\_KEY}, optionally \texttt{AEGIS\_LLM\_MODEL}, then give UI consent.
+
+Production work would require authenticated user identity, durable transactional accounts, approved real products and licensed data, jurisdiction-specific suitability, independently reviewed security, audited brokerage integration and external validation. The team must supply its actual GitHub repository link and complete registration details. A reproducible local video replay is included; live provider and organizer-hosted sandbox execution are not claimed.
+
+\begin{thebibliography}{9}
+\bibitem{rules} Competition organizers. \emph{Problem Description and Competition Rules for International Track}, 2026. University-hosted copy: \url{https://drive.scmc.cmu.ac.th/s/2jKErkTJpFmcxYF}. Accessed 20 October 2026 (Europe/Rome).
+\bibitem{ek} P. Mohajerin Esfahani and D. Kuhn. Data-driven distributionally robust optimization using the Wasserstein metric: performance guarantees and tractable reformulations. \emph{Mathematical Programming} 171, 115--166, 2018. \url{https://doi.org/10.1007/s10107-017-1172-1}.
+\bibitem{scipy} SciPy. \texttt{scipy.optimize.linprog} API and HiGHS interface. \url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html}.
+\bibitem{openai} OpenAI. Chat API reference. \url{https://developers.openai.com/api/reference/resources/chat}.
+\end{thebibliography}
+\end{document}

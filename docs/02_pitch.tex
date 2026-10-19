@@ -1,0 +1,121 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[T1]{fontenc}\usepackage{lmodern,booktabs,amsmath}
+\definecolor{navy}{HTML}{101724}\definecolor{mint}{HTML}{147D68}
+\setbeamercolor{normal text}{fg=navy,bg=white}
+\setbeamercolor{structure}{fg=mint}
+\setbeamercolor{frametitle}{fg=navy}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\hfill\scriptsize AEGIS / Topic B\quad\insertframenumber/\inserttotalframenumber\hspace{5mm}\vspace{3mm}}
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+\title{AEGIS}
+\subtitle{Inspectable wealth advice\\with explicit simulation approval}
+\author{Stefano Bloise \and Fahd Mounir}
+\date{2026 Shenzhen International FinTech Competition}
+\begin{document}
+\begin{frame}
+\vspace{10mm}{\Huge\bfseries AEGIS}\par\vspace{5mm}
+{\Large Inspectable wealth advice\\with explicit simulation approval}\par\vspace{9mm}
+Stefano Bloise \quad Fahd Mounir\par\vspace{3mm}
+{\small International Track / Topic B}\par\vspace{7mm}
+{\footnotesize Research simulator. Fictional products and synthetic data.}
+\end{frame}
+\begin{frame}{The advisory decision}
+\Large A client should be able to inspect what an agent understood before anything changes.\par\vspace{8mm}
+\normalsize
+\begin{itemize}\item Product comparison provides context for the choice.
+\item The profile sets visible allocation limits.
+\item Contradictory instructions trigger clarification.
+\item A reviewed proposal requires a separate simulation approval.\end{itemize}
+\vspace{5mm}\small Our target is an auditable completed workflow, not an unsupported return forecast.
+\end{frame}
+\begin{frame}{The working client journey}
+\begin{enumerate}
+\item Compare six fictional sleeves and their principal risks.
+\item Complete horizon, liquidity, risk, loss tolerance and experience.
+\item Interpret and confirm explicit allocation bounds.
+\item Inspect the allocation, risk envelope and constraint residuals.
+\item Approve and execute a specific simulated rebalance.
+\end{enumerate}
+\vspace{6mm}
+\textbf{Demo mandate:} TECH at most 15\%, BOND at least 20\%, CASH at least 15\%.\par
+\small Optional LLM mode supports prose. Offline mode uses a precise command grammar.
+\end{frame}
+\begin{frame}{A constrained role for the language model}
+\Large The model drafts bounds. The application controls permission.\par\vspace{7mm}
+\normalsize\begin{itemize}
+\item Only product IDs, inequality directions and numerical weights enter the draft.
+\item Unexpected fields, nonfinite values and unsupported products fail validation.
+\item The user reviews the interpretation before optimization.
+\item Provider failures stop explicitly; the demo remains usable offline.
+\end{itemize}
+\vspace{5mm}\footnotesize Live provider execution is unverified in this release. Injected responses test the adapter and its failure boundary.
+\end{frame}
+\begin{frame}{A robust allocation problem we can inspect}
+\[
+\min_{w\in\mathcal W}\ -\bar r^Tv+\gamma\widehat C_\alpha(v)
++\epsilon\Bigl(1+\frac{\gamma}{1-\alpha}\Bigr)\|v\|_\infty
++k\|w-w_0\|_1
+\]
+\begin{itemize}
+\item Daily units throughout. CASH has zero modeled return.
+\item The Wasserstein epigraph objective reduces to a sparse LP.
+\item Policy and confirmed client bounds remain hard constraints.
+\item Independent checks reconstruct the objective and verify feasibility.
+\end{itemize}
+\vspace{3mm}\footnotesize Standard robust-optimization tools, integrated into the approval workflow. The uncertainty radius is illustrative, not statistically calibrated.
+\end{frame}
+\begin{frame}{Conflicting instructions stop the workflow}
+\Large ``EQ at most 5\%, and EQ at least 35\%.''\par\vspace{8mm}
+\normalsize
+\textbf{Result: NEEDS\_REVISION}\par\vspace{4mm}
+No portfolio is issued. No constraint is silently relaxed. No approval token is created.\par\vspace{7mm}
+The client can revise the visible mandate and request a fresh proposal.
+\end{frame}
+\begin{frame}{Approval tied to an exact proposal}
+\begin{tabular}{ll}\toprule
+State & Required control\\\midrule
+Read & Product and draft inspection only\\
+Propose & Confirmed bounds and validated numerical result\\
+Approve simulation & Explicit confirmation, stored proposal, current revision\\
+Execute simulation & Matching token, unexpired proposal, no replay\\\bottomrule
+\end{tabular}\par\vspace{7mm}
+\textbf{Evidence:} forged approval and replay both return DENIED.\par\vspace{4mm}
+\footnotesize Process-local capabilities in a single-user demo. No production identity service or live broker integration.
+\end{frame}
+\begin{frame}{Executed simulation results}
+\begin{columns}[T]
+\begin{column}{.47\textwidth}
+{\Huge\bfseries 51}\par Test methods passed\par\vspace{5mm}
+{\Huge\bfseries 7}\par Evidence scenarios matched expectations
+\end{column}
+\begin{column}{.49\textwidth}
+\begin{tabular}{lr}\toprule
+Account & USD\\\midrule
+Initial NAV & 100,000\\
+Simulated fee & 4\\
+Final NAV & 99,996\\\bottomrule
+\end{tabular}\par\vspace{4mm}
+20\% BOND, 80\% CASH under the client's explicit floor.\par\vspace{3mm}
+Nine chained audit events.
+\end{column}
+\end{columns}
+\vspace{6mm}\footnotesize Local synthetic execution, not historical performance. Counts and values come from the included test and session logs.
+\end{frame}
+\begin{frame}{What the evidence supports}
+\begin{itemize}
+\item Reproducible numerical tests and a complete simulated account workflow.
+\item Failures handled as structured abstention or denial.
+\item An optional LLM adapter isolated from permissions and account mutation.
+\item Source, raw LaTeX, execution logs and a short operation replay.
+\end{itemize}
+\vspace{5mm}
+\textbf{Remaining validation:} live model semantics, licensed real-product data, jurisdictional suitability, production authentication and durable execution.\par\vspace{3mm}
+\footnotesize No claim of bug freedom, regulatory certification or investment outperformance.
+\end{frame}
+\begin{frame}{Next milestone}
+\Large A reviewed pilot with real product data and authenticated users.\par\vspace{8mm}
+\normalsize First validate the full interpretation and suitability workflow against labeled cases. Then integrate an independently reviewed sandbox account adapter.\par\vspace{8mm}
+\textbf{Today:} reviewers can run the complete local workflow and inspect every proposed account change.
+\end{frame}
+\end{document}

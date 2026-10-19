@@ -1,0 +1,17 @@
+[
+  {
+    "asset": "TECH",
+    "sense": "<=",
+    "weight": 0.15
+  },
+  {
+    "asset": "CASH",
+    "sense": ">=",
+    "weight": 0.15
+  },
+  {
+    "asset": "BOND",
+    "sense": ">=",
+    "weight": 0.2
+  }
+]

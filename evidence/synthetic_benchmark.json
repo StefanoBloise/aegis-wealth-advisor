@@ -1,0 +1,26 @@
+{
+  "scope": "One synthetic path, seed 73; trailing 252 rows only, 21-day rebalancing, drifting weights, 1bp L1 costs. No historical or statistical superiority claim.",
+  "results": {
+    "Robust": {
+      "net_return": 0.1453706212734982,
+      "max_drawdown": -0.08100174939126248,
+      "fees_initial_nav_fraction": 0.00028418236529423194,
+      "rebalances": 12,
+      "optimization_runs": 12
+    },
+    "Empirical": {
+      "net_return": 0.14604494349173436,
+      "max_drawdown": -0.08100174939126248,
+      "fees_initial_nav_fraction": 0.00028416709618265574,
+      "rebalances": 12,
+      "optimization_runs": 12
+    },
+    "Fixed feasible allocation": {
+      "net_return": 0.053414070456159424,
+      "max_drawdown": -0.044286742899222076,
+      "fees_initial_nav_fraction": 0.0001427332325405056,
+      "rebalances": 12,
+      "optimization_runs": 0
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "scope": "Executed local simulated account; not an organizer-hosted sandbox. Optional live LLM was not called.",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "cases": [
+    {
+      "case": "feasible_mandate",
+      "expected": "PROPOSED",
+      "actual": "PROPOSED"
+    },
+    {
+      "case": "execution_without_approval",
+      "expected": "DENIED",
+      "actual": "DENIED"
+    },
+    {
+      "case": "approved_simulation",
+      "expected": "SIMULATED",
+      "actual": "SIMULATED"
+    },
+    {
+      "case": "replay",
+      "expected": "DENIED",
+      "actual": "DENIED"
+    },
+    {
+      "case": "conflicting_mandate",
+      "expected": "NEEDS_REVISION",
+      "actual": "NEEDS_REVISION"
+    },
+    {
+      "case": "prompt_injection_offline",
+      "expected": "CLARIFY",
+      "actual": "CLARIFY"
+    },
+    {
+      "case": "mock_llm_privilege_injection",
+      "expected": "UNAVAILABLE",
+      "actual": "UNAVAILABLE"
+    }
+  ],
+  "proposal_wall_ms": 6.601866999972117,
+  "validation": {
+    "max_primal_residual": 0.0,
+    "objective_reconstruction_error": 1.3552527156068805e-20,
+    "stationarity_residual": 1.0842021724855044e-19,
+    "complementarity_residual": 0.0
+  },
+  "audit_records": 9,
+  "audit_chain_valid": true,
+  "audit_head": "328c3b9d50f8b43265eb435b028334dd533fd8f78ffb2fc9076413a960202cbe",
+  "final_nav": 99996.0,
+  "data_sha256": "9d4a2a0244670a088ba25fcd8bf6e22bf32b001b861d98911176f901b5ce4fd8",
+  "data_kind": "synthetic",
+  "seed": 42,
+  "observations": 252,
+  "limitations": [
+    "No live LLM integration run",
+    "No market-data validation",
+    "No external penetration test",
+    "No broker or organizer sandbox credentials"
+  ]
+}

@@ -1,0 +1,205 @@
+[
+  {
+    "title": "01 / Product comparison",
+    "body": {
+      "data_kind": "illustrative_catalog",
+      "products": [
+        {
+          "id": "EQ",
+          "name": "Global equity model",
+          "class": "Equity",
+          "fee_bps": 12,
+          "risk": "Equity drawdown and currency risk"
+        },
+        {
+          "id": "TECH",
+          "name": "Technology equity model",
+          "class": "Equity",
+          "fee_bps": 25,
+          "risk": "Sector concentration and valuation risk"
+        },
+        {
+          "id": "BOND",
+          "name": "Intermediate government bond model",
+          "class": "Bond",
+          "fee_bps": 10,
+          "risk": "Interest-rate and inflation risk"
+        },
+        {
+          "id": "CREDIT",
+          "name": "Investment-grade credit model",
+          "class": "Bond",
+          "fee_bps": 18,
+          "risk": "Default, spread and liquidity risk"
+        },
+        {
+          "id": "GOLD",
+          "name": "Gold model",
+          "class": "Commodity",
+          "fee_bps": 20,
+          "risk": "Price volatility, no contractual income"
+        },
+        {
+          "id": "CASH",
+          "name": "Simulated uninvested cash",
+          "class": "Cash",
+          "fee_bps": 0,
+          "risk": "Inflation; real custody risks are not simulated"
+        }
+      ],
+      "disclosure": "Fictional products and illustrative fees. No eligibility, tax or regulatory determination."
+    }
+  },
+  {
+    "title": "02 / Explicit mandate interpretation",
+    "body": {
+      "status": "DRAFT",
+      "source": "offline_grammar",
+      "constraints": [
+        {
+          "asset": "TECH",
+          "sense": "<=",
+          "weight": 0.15
+        },
+        {
+          "asset": "BOND",
+          "sense": ">=",
+          "weight": 0.2
+        },
+        {
+          "asset": "CASH",
+          "sense": ">=",
+          "weight": 0.15
+        }
+      ]
+    }
+  },
+  {
+    "title": "03 / Reviewed allocation",
+    "body": {
+      "profile": {
+        "horizon_years": 7,
+        "risk": "growth",
+        "liquidity_fraction": 0.15,
+        "loss_tolerance": 0.25,
+        "experience": "experienced"
+      },
+      "status": "PROPOSED",
+      "weights": {
+        "EQ": 0.0,
+        "TECH": 0.0,
+        "BOND": 0.2,
+        "CREDIT": 0.0,
+        "GOLD": 0.0,
+        "CASH": 0.8
+      },
+      "metrics": {
+        "daily_mean": -2.190462345037015e-05,
+        "daily_cvar": 0.0016881893774390525,
+        "daily_robust_cvar": 0.0017681893774390525,
+        "daily_volatility": 0.000735246931404718,
+        "turnover_l1": 0.39999999999999997,
+        "estimated_rebalance_cost_fraction": 3.9999999999999996e-05,
+        "objective": 0.0001012684109991512
+      }
+    }
+  },
+  {
+    "title": "04 / Execution without approval",
+    "body": {
+      "status": "DENIED",
+      "message": "No account change"
+    }
+  },
+  {
+    "title": "05 / Approved simulated rebalance",
+    "body": {
+      "status": "SIMULATED",
+      "proposal_id": "60e6e0bcfb413c12feedee1d1bec8b8bf76ac3fe125cc949b422e809f09f763f",
+      "nav_before": 100000.0,
+      "fee": 3.9999999999999996,
+      "nav_after": 99996.0,
+      "weights_before": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "weights_after": [
+        0.0,
+        0.0,
+        0.2,
+        0.0,
+        0.0,
+        0.8
+      ],
+      "dollar_changes": {
+        "EQ": 0.0,
+        "TECH": 0.0,
+        "BOND": 19999.2,
+        "CREDIT": 0.0,
+        "GOLD": 0.0,
+        "CASH": -20003.199999999997
+      },
+      "revision": 1,
+      "disclosure": "Fractional notional rebalance at unchanged prices, fee charged on pre-fee L1 turnover. No real orders."
+    }
+  },
+  {
+    "title": "06 / Conflicting constraints",
+    "body": {
+      "status": "NEEDS_REVISION",
+      "message": "Constraints conflict. Revise the mandate; no constraints were relaxed.",
+      "constraints": [
+        {
+          "asset": "EQ",
+          "sense": "<=",
+          "weight": 0.05
+        },
+        {
+          "asset": "EQ",
+          "sense": ">=",
+          "weight": 0.35
+        }
+      ]
+    }
+  },
+  {
+    "title": "07 / Replay and untrusted text",
+    "body": {
+      "replay": {
+        "status": "DENIED",
+        "message": "No account change"
+      },
+      "offline_injection": {
+        "status": "CLARIFY",
+        "source": "offline_grammar",
+        "message": "Use semicolon-separated commands, e.g. TECH <= 15%; CASH >= 20%. Supported products: EQ, TECH, BOND, CREDIT, GOLD, CASH.",
+        "constraints": []
+      },
+      "mock_llm_invalid_schema": {
+        "status": "UNAVAILABLE",
+        "source": "llm",
+        "message": "Parser failed safely; use explicit structured constraints.",
+        "error_type": "InputError",
+        "constraints": []
+      }
+    }
+  },
+  {
+    "title": "08 / Reproducible evidence",
+    "body": {
+      "cases_passed": 7,
+      "chain_valid": true,
+      "validation": {
+        "max_primal_residual": 0.0,
+        "objective_reconstruction_error": 1.3552527156068805e-20,
+        "stationarity_residual": 1.0842021724855044e-19,
+        "complementarity_residual": 0.0
+      },
+      "scope": "Executed local simulated account; not an organizer-hosted sandbox. Optional live LLM was not called."
+    }
+  }
+]

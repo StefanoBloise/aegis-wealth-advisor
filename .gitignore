@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+runs/
+build/
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+!evidence/tests.log

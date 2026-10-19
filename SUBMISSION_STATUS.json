@@ -1,0 +1,12 @@
+{
+  "topic": "International Track / Topic B: Wealth Advisory Agent",
+  "github_repository_url": "https://github.com/StefanoBloise/aegis-wealth-advisor",
+  "team_action_required": [
+    "Review authorship, competition independent-work rules and all source changes.",
+    "Complete the official registration and member documents separately.",
+    "If using live LLM mode in the pitch, test it with your own key and model access first."
+  ],
+  "evidence_scope": "Local simulated account, synthetic data; no live LLM or organizer-hosted sandbox run",
+  "deadline_beijing": "2026-10-20T23:59:00+08:00",
+  "deadline_rome": "2026-10-20T17:59:00+02:00"
+}
