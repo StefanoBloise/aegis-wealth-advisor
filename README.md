@@ -80,10 +80,12 @@ offline mode requires no API key, network connection or model download.
 | 05 Security assessment | `docs/05_security.tex` and compiled PDF |
 | 06 Execution evidence | `evidence/session/`, `evidence/tests.log`, benchmark JSON and the operation replay |
 
-**GitHub repository link:** not supplied and no repository was published in this
-build. Add your actual team URL using the packaging command below. This remains
-a required team action for Deliverable 04. Do not submit a fabricated URL.
-`SUBMISSION_STATUS.json` tracks this gap and the separate registration tasks.
+**Public source repository:** https://github.com/StefanoBloise/aegis-wealth-advisor
+
+The repository contains the source, tests, deployment instructions and editable
+LaTeX. The final submission ZIP contains the compiled PDFs, synthetic logs and
+demo replay as well. `SUBMISSION_STATUS.json` records the repository and the
+team tasks that remain outside this software package.
 
 The video is explicitly an output replay from an executed local session, not a
 screen recording of browser clicks, a live LLM session or an organizer-hosted
@@ -148,18 +150,18 @@ with pdfLaTeX and visually inspected in this build.
 From the release root, run:
 
 ```bash
-python tools/build.py --repo-url https://github.com/YOUR_TEAM/YOUR_REPOSITORY
+python tools/build.py --repo-url https://github.com/StefanoBloise/aegis-wealth-advisor
 ```
 
-Replace the example URL with the actual repository. The command runs all tests,
+The command runs all tests,
 compiles each document twice, verifies the audit chain, writes `MANIFEST.sha256`
 and creates **`../AEGIS_Final_Submission.zip`**. It records the URL but does not
-publish a repository or verify that its contents match this source tree.
+publish or verify the GitHub repository.
 
 If you only need to package the included PDFs and cannot install LaTeX:
 
 ```bash
-python tools/build.py --skip-latex --repo-url https://github.com/YOUR_TEAM/YOUR_REPOSITORY
+python tools/build.py --skip-latex --repo-url https://github.com/StefanoBloise/aegis-wealth-advisor
 ```
 
 For a local review ZIP without the repository link:
@@ -185,7 +187,7 @@ required to build this optional image. No container runtime is bundled.
 
 ## Submission checklist before sending
 
-- Supply the actual GitHub URL and ensure the repository is accessible to judges.
+- Include the public repository URL above in the submission email.
 - Review team identity, source ownership and competition independent-work terms.
   The release contains substantial AI-assisted refactoring; no unsupported
   declaration of independent authorship has been made for the team.

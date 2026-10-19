@@ -1,0 +1,56 @@
+test_csrf_rejected (test_system.HTTPTests.test_csrf_rejected) ... ok
+test_health (test_system.HTTPTests.test_health) ... ok
+test_host_rejected (test_system.HTTPTests.test_host_rejected) ... ok
+test_http_end_to_end (test_system.HTTPTests.test_http_end_to_end) ... ok
+test_bad_parameters (test_system.NumericalTests.test_bad_parameters) ... ok
+test_bad_previous (test_system.NumericalTests.test_bad_previous) ... ok
+test_beginner_policy (test_system.NumericalTests.test_beginner_policy) ... ok
+test_cash_short_horizon (test_system.NumericalTests.test_cash_short_horizon) ... ok
+test_conflict_not_repaired (test_system.NumericalTests.test_conflict_not_repaired) ... ok
+test_corrupt_solver_result_rejected (test_system.NumericalTests.test_corrupt_solver_result_rejected) ... ok
+test_cvar_against_independent_lp (test_system.NumericalTests.test_cvar_against_independent_lp) ... ok
+test_cvar_fractional_tail (test_system.NumericalTests.test_cvar_fractional_tail) ... ok
+test_cvar_ties (test_system.NumericalTests.test_cvar_ties) ... ok
+test_dimensions_and_nan (test_system.NumericalTests.test_dimensions_and_nan) ... ok
+test_direct_contradiction (test_system.NumericalTests.test_direct_contradiction) ... ok
+test_dual_finite_difference (test_system.NumericalTests.test_dual_finite_difference) ... ok
+test_epsilon_monotone_objective (test_system.NumericalTests.test_epsilon_monotone_objective) ... ok
+test_invalid_cash_column (test_system.NumericalTests.test_invalid_cash_column) ... ok
+test_missing_profile (test_system.NumericalTests.test_missing_profile) ... ok
+test_profile_strict (test_system.NumericalTests.test_profile_strict) ... ok
+test_random_feasibility_and_kkt (test_system.NumericalTests.test_random_feasibility_and_kkt) ... ok
+test_reproducibility (test_system.NumericalTests.test_reproducibility) ... ok
+test_solver_exception_abstains (test_system.NumericalTests.test_solver_exception_abstains) ... ok
+test_unknown_constraint_rejected (test_system.NumericalTests.test_unknown_constraint_rejected) ... ok
+test_wasserstein_asymptotic_lower_construction (test_system.NumericalTests.test_wasserstein_asymptotic_lower_construction) ... ok
+test_wasserstein_upper_bound_transport (test_system.NumericalTests.test_wasserstein_upper_bound_transport) ... ok
+test_zero_loss_policy (test_system.NumericalTests.test_zero_loss_policy) ... ok
+test_ambiguous_no_defaults (test_system.ParserTests.test_ambiguous_no_defaults) ... ok
+test_grammar (test_system.ParserTests.test_grammar) ... ok
+test_injection (test_system.ParserTests.test_injection) ... ok
+test_llm_bad_json (test_system.ParserTests.test_llm_bad_json) ... ok
+test_llm_cannot_grant_role (test_system.ParserTests.test_llm_cannot_grant_role) ... ok
+test_llm_clarification_abstains (test_system.ParserTests.test_llm_clarification_abstains) ... ok
+test_llm_duplicate_keys (test_system.ParserTests.test_llm_duplicate_keys) ... ok
+test_llm_mock_success (test_system.ParserTests.test_llm_mock_success) ... ok
+test_llm_nan (test_system.ParserTests.test_llm_nan) ... ok
+test_llm_timeout (test_system.ParserTests.test_llm_timeout) ... ok
+test_missing_credentials (test_system.ParserTests.test_missing_credentials) ... ok
+test_out_of_range (test_system.ParserTests.test_out_of_range) ... ok
+test_approved_rebalance_and_replay (test_system.SecurityTests.test_approved_rebalance_and_replay) ... ok
+test_audit_failure_no_account_mutation (test_system.SecurityTests.test_audit_failure_no_account_mutation) ... ok
+test_audit_file_roundtrip (test_system.SecurityTests.test_audit_file_roundtrip) ... ok
+test_audit_tamper_detection (test_system.SecurityTests.test_audit_tamper_detection) ... ok
+test_expiry (test_system.SecurityTests.test_expiry) ... ok
+test_network_consent (test_system.SecurityTests.test_network_consent) ... ok
+test_no_approval (test_system.SecurityTests.test_no_approval) ... ok
+test_no_confirmation (test_system.SecurityTests.test_no_confirmation) ... ok
+test_permission_cannot_be_escalated (test_system.SecurityTests.test_permission_cannot_be_escalated) ... ok
+test_read_cannot_propose (test_system.SecurityTests.test_read_cannot_propose) ... ok
+test_returned_proposal_mutation_does_not_change_execution (test_system.SecurityTests.test_returned_proposal_mutation_does_not_change_execution) ... ok
+test_stale_proposal (test_system.SecurityTests.test_stale_proposal) ... ok
+
+----------------------------------------------------------------------
+Ran 51 tests in 0.841s
+
+OK
